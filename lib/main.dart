@@ -18,26 +18,31 @@ class TypingApp extends StatefulWidget {
 
 class _TypingAppState extends State<TypingApp> {
   List<String> typedWords = [];
-  List<String> sentences = [
-    "Hello world",
-    "Flutter is amazing",
-    "Typing speed test",
-    "Welcome to adaptive typing",
-    "Let's build something cool",
-  ];
+  Map<String, List<String>> wordChains = {
+    "": ["I", "You", "We", "They"],
+    "I": ["am", "will", "like", "have"],
+    "You": ["are", "will", "want", "need"],
+    "We": ["should", "can", "have", "love"],
+    "They": ["do", "might", "enjoy", "prefer"],
+    "am": ["happy", "tired", "ready", "here"],
+    "will": ["go", "stay", "help", "wait"],
+    "like": ["this", "that", "playing", "coding"],
+  };
+  List<String> availableWords = ["I", "You", "We", "They"];
 
   void addWord(String word) {
     setState(() {
       typedWords.add(word);
+      availableWords = wordChains[word] ?? [];
       if (typedWords.length > 6) {
-        typedWords.removeAt(0); // Remove top line like a teleprompter
+        typedWords.removeAt(0);
       }
     });
 
     Timer(Duration(seconds: 5), () {
       if (mounted && typedWords.isNotEmpty) {
         setState(() {
-          typedWords.removeAt(0); // Auto-remove oldest word after 5 seconds
+          typedWords.removeAt(0);
         });
       }
     });
@@ -47,6 +52,7 @@ class _TypingAppState extends State<TypingApp> {
     setState(() {
       if (typedWords.isNotEmpty) {
         typedWords.removeLast();
+        availableWords = wordChains[typedWords.isNotEmpty ? typedWords.last : ""] ?? ["I", "You", "We", "They"];
       }
     });
   }
@@ -63,13 +69,12 @@ class _TypingAppState extends State<TypingApp> {
               children: [
                 Expanded(
                   flex: 2,
-                  child: Stack(
-                    children: [
-                      _buildButton(left: 100, top: 50, text: sentences[0]),
-                      _buildButton(left: 300, top: 20, text: sentences[1]),
-                      _buildButton(right: 300, top: 20, text: sentences[2]),
-                      _buildButton(right: 100, top: 50, text: sentences[3]),
-                    ],
+                  child: GridView.count(
+                    crossAxisCount: 4,
+                    padding: EdgeInsets.all(20),
+                    children: availableWords.map((word) {
+                      return _buildButton(text: word);
+                    }).toList(),
                   ),
                 ),
                 Expanded(
@@ -79,25 +84,21 @@ class _TypingAppState extends State<TypingApp> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        AnimatedOpacity(
-                          opacity: typedWords.length >= 3 ? 0.5 : 1.0,
-                          duration: Duration(seconds: 1),
-                          child: Container(
-                            width: double.infinity,
-                            height: 80,
-                            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                            decoration: BoxDecoration(
-                              color: Colors.grey[800],
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: Text(
-                                typedWords.join(" "),
-                                style: TextStyle(color: Colors.white, fontSize: 18),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.clip,
-                              ),
+                        Container(
+                          width: double.infinity,
+                          height: 80,
+                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[800],
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              typedWords.join(" "),
+                              style: TextStyle(color: Colors.white, fontSize: 18),
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.clip,
                             ),
                           ),
                         ),
@@ -133,25 +134,16 @@ class _TypingAppState extends State<TypingApp> {
     );
   }
 
-  Widget _buildButton({double? left, double? right, required double top, required String text}) {
-    return Positioned(
-      left: left,
-      right: right,
-      top: top,
-      child: SizedBox(
-        width: 120,
-        height: 180,
-        child: ElevatedButton(
-          onPressed: () => addWord(text),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.grey[700],
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-          child: Text(text, style: TextStyle(color: Colors.white), textAlign: TextAlign.center),
+  Widget _buildButton({required String text}) {
+    return ElevatedButton(
+      onPressed: () => addWord(text),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.grey[700],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
         ),
       ),
+      child: Text(text, style: TextStyle(color: Colors.white), textAlign: TextAlign.center),
     );
   }
 }
