@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'dart:async';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,6 +29,17 @@ class _TypingAppState extends State<TypingApp> {
   void addWord(String word) {
     setState(() {
       typedWords.add(word);
+      if (typedWords.length > 6) {
+        typedWords.removeAt(0); // Remove top line like a teleprompter
+      }
+    });
+
+    Timer(Duration(seconds: 5), () {
+      if (mounted && typedWords.isNotEmpty) {
+        setState(() {
+          typedWords.removeAt(0); // Auto-remove oldest word after 5 seconds
+        });
+      }
     });
   }
 
@@ -45,50 +57,67 @@ class _TypingAppState extends State<TypingApp> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: Color(0xFF1F1F1F),
-        body: Column(
+        body: Stack(
           children: [
-            Expanded(
-              flex: 2,
-              child: Stack(
-                children: [
-                  _buildButton(left: 100, top: 50, text: sentences[0]),
-                  _buildButton(left: 300, top: 20, text: sentences[1]),
-                  _buildButton(right: 300, top: 20, text: sentences[2]),
-                  _buildButton(right: 100, top: 50, text: sentences[3]),
-                ],
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 80),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[900],
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text(
-                        typedWords.join(" "),
-                        style: TextStyle(color: Colors.white, fontSize: 18),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: removeLastWord,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+            Column(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: Stack(
+                    children: [
+                      _buildButton(left: 100, top: 50, text: sentences[0]),
+                      _buildButton(left: 300, top: 20, text: sentences[1]),
+                      _buildButton(right: 300, top: 20, text: sentences[2]),
+                      _buildButton(right: 100, top: 50, text: sentences[3]),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 80),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        AnimatedOpacity(
+                          opacity: typedWords.length >= 3 ? 0.5 : 1.0,
+                          duration: Duration(seconds: 1),
+                          child: Container(
+                            padding: EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[800],
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Text(
+                              typedWords.join(" "),
+                              style: TextStyle(color: Colors.white, fontSize: 18),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
                         ),
-                      ),
-                      child: Text("Backspace", style: TextStyle(color: Colors.white)),
+                      ],
                     ),
-                  ],
+                  ),
+                ),
+              ],
+            ),
+            Positioned(
+              right: 10,
+              bottom: 10,
+              child: GestureDetector(
+                onTap: removeLastWord,
+                child: Container(
+                  width: 70,
+                  height: 70,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[700],
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(70),
+                    ),
+                  ),
+                  child: Center(
+                    child: Icon(Icons.backspace, color: Colors.white, size: 24),
+                  ),
                 ),
               ),
             ),
@@ -109,7 +138,7 @@ class _TypingAppState extends State<TypingApp> {
         child: ElevatedButton(
           onPressed: () => addWord(text),
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.grey[800],
+            backgroundColor: Colors.grey[700],
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
