@@ -50,5 +50,5 @@ flutter run
 Contributions are welcome! Fork the repository, create a branch, and submit a pull request.
 
 ## License
-This project is open-source under the MIT License.
+This project is open-source under the GNU GPL v3 License.
 

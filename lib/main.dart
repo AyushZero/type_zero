@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:async';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,14 +29,12 @@ class _TypingAppState extends State<TypingApp> {
     setState(() {
       typedWords.add(word);
     });
+  }
 
-    Timer(Duration(seconds: 2), () {
-      if (mounted) {
-        setState(() {
-          if (typedWords.isNotEmpty) {
-            typedWords.removeAt(0);
-          }
-        });
+  void removeLastWord() {
+    setState(() {
+      if (typedWords.isNotEmpty) {
+        typedWords.removeLast();
       }
     });
   }
@@ -64,13 +61,34 @@ class _TypingAppState extends State<TypingApp> {
             Expanded(
               flex: 1,
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 80), // Increased margins
-                child: Center(
-                  child: Text(
-                    typedWords.join(" "),
-                    style: TextStyle(color: Colors.white, fontSize: 18), // Smaller font size
-                    textAlign: TextAlign.center,
-                  ),
+                padding: EdgeInsets.symmetric(horizontal: 80),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[900],
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text(
+                        typedWords.join(" "),
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: removeLastWord,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: Text("Backspace", style: TextStyle(color: Colors.white)),
+                    ),
+                  ],
                 ),
               ),
             ),
