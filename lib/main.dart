@@ -17,8 +17,8 @@ class TypingApp extends StatefulWidget {
 }
 
 class _TypingAppState extends State<TypingApp> {
-  List<String> sentences = [];
-  List<String> currentSentence = [];
+  String currentSentence = "";
+  Timer? sentenceTimer;
   Map<String, List<String>> wordChains = {
     "": ["I", "You", "We", "They"],
     "I": ["am", "will", "like", "have"],
@@ -34,20 +34,24 @@ class _TypingAppState extends State<TypingApp> {
 
   void addWord(String word) {
     setState(() {
-      currentSentence.add(word);
+      currentSentence += (currentSentence.isEmpty ? "" : " ") + word;
       availableWords = wordChains[word] ?? [];
 
       fullStopTimer?.cancel();
       fullStopTimer = Timer(Duration(milliseconds: 500), () {
-        if (mounted && currentSentence.isNotEmpty && !currentSentence.last.endsWith(".")) {
+        if (mounted && currentSentence.isNotEmpty && !currentSentence.endsWith(".")) {
           setState(() {
-            currentSentence[currentSentence.length - 1] += ".";
-            sentences.add(currentSentence.join(" "));
-            if (sentences.length > 2) {
-              sentences.removeAt(0);
-            }
-            currentSentence.clear();
+            currentSentence += ".";
             availableWords = ["I", "You", "We", "They"];
+          });
+        }
+      });
+
+      sentenceTimer?.cancel();
+      sentenceTimer = Timer(Duration(seconds: 3), () {
+        if (mounted) {
+          setState(() {
+            currentSentence = "";
           });
         }
       });
@@ -56,9 +60,11 @@ class _TypingAppState extends State<TypingApp> {
 
   void removeLastWord() {
     setState(() {
-      if (currentSentence.isNotEmpty) {
-        currentSentence.removeLast();
-        availableWords = wordChains[currentSentence.isNotEmpty ? currentSentence.last : ""] ?? ["I", "You", "We", "They"];
+      List<String> words = currentSentence.split(" ");
+      if (words.isNotEmpty) {
+        words.removeLast();
+        currentSentence = words.join(" ");
+        availableWords = wordChains[words.isNotEmpty ? words.last : ""] ?? ["I", "You", "We", "They"];
       }
     });
   }
@@ -101,13 +107,7 @@ class _TypingAppState extends State<TypingApp> {
                           ),
                           child: Align(
                             alignment: Alignment.center,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                if (sentences.isNotEmpty) Text(sentences.join("\n"), style: TextStyle(color: Colors.white, fontSize: 18), textAlign: TextAlign.center),
-                                Text(currentSentence.join(" "), style: TextStyle(color: Colors.white, fontSize: 18), textAlign: TextAlign.center),
-                              ],
-                            ),
+                            child: Text(currentSentence, style: TextStyle(color: Colors.white, fontSize: 18), textAlign: TextAlign.center),
                           ),
                         ),
                       ],
