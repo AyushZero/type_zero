@@ -63,10 +63,14 @@ class _TypingAppState extends State<TypingApp> {
             ),
             Expanded(
               flex: 1,
-              child: Center(
-                child: Text(
-                  typedWords.join(" "),
-                  style: TextStyle(color: Colors.white, fontSize: 24),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 80), // Increased margins
+                child: Center(
+                  child: Text(
+                    typedWords.join(" "),
+                    style: TextStyle(color: Colors.white, fontSize: 18), // Smaller font size
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
             ),
