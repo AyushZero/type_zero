@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:animate_do/animate_do.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,6 +30,13 @@ class _TypingAppState extends State<TypingApp> {
     setState(() {
       typedText += (typedText.isEmpty ? "" : " ") + word;
     });
+    Future.delayed(Duration(seconds: 2), () {
+      if (mounted) {
+        setState(() {
+          typedText = "";
+        });
+      }
+    });
   }
 
   @override
@@ -40,15 +48,6 @@ class _TypingAppState extends State<TypingApp> {
         body: Column(
           children: [
             Expanded(
-              flex: 1,
-              child: Center(
-                child: Text(
-                  typedText,
-                  style: TextStyle(color: Colors.white, fontSize: 24),
-                ),
-              ),
-            ),
-            Expanded(
               flex: 2,
               child: Stack(
                 children: [
@@ -57,6 +56,18 @@ class _TypingAppState extends State<TypingApp> {
                   _buildButton(right: 300, top: 20, text: sentences[2]),
                   _buildButton(right: 100, top: 50, text: sentences[3]),
                 ],
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Center(
+                child: FadeOut(
+                  duration: Duration(seconds: 2),
+                  child: Text(
+                    typedText,
+                    style: TextStyle(color: Colors.white, fontSize: 24),
+                  ),
+                ),
               ),
             ),
           ],
