@@ -152,7 +152,7 @@ class _TypingAppState extends State<TypingApp> {
   Widget _buildButton({required String text}) {
     return SizedBox(
       width: 120,
-      height: 60,
+      height: 160,
       child: ElevatedButton(
         onPressed: () => addWord(text),
         style: ElevatedButton.styleFrom(
