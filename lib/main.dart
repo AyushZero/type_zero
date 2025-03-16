@@ -83,15 +83,21 @@ class _TypingAppState extends State<TypingApp> {
                           opacity: typedWords.length >= 3 ? 0.5 : 1.0,
                           duration: Duration(seconds: 1),
                           child: Container(
-                            padding: EdgeInsets.all(12),
+                            width: double.infinity,
+                            height: 80,
+                            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                             decoration: BoxDecoration(
                               color: Colors.grey[800],
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: Text(
-                              typedWords.join(" "),
-                              style: TextStyle(color: Colors.white, fontSize: 18),
-                              textAlign: TextAlign.center,
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                typedWords.join(" "),
+                                style: TextStyle(color: Colors.white, fontSize: 18),
+                                textAlign: TextAlign.center,
+                                overflow: TextOverflow.clip,
+                              ),
                             ),
                           ),
                         ),
@@ -102,8 +108,8 @@ class _TypingAppState extends State<TypingApp> {
               ],
             ),
             Positioned(
-              right: 10,
-              bottom: 10,
+              left: 1,
+              bottom: 1,
               child: GestureDetector(
                 onTap: removeLastWord,
                 child: Container(
@@ -112,11 +118,11 @@ class _TypingAppState extends State<TypingApp> {
                   decoration: BoxDecoration(
                     color: Colors.grey[700],
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(70),
+                      topRight: Radius.circular(70),
                     ),
                   ),
                   child: Center(
-                    child: Icon(Icons.backspace, color: Colors.white, size: 24),
+                    child: Icon(Icons.backspace, color: Colors.white, size: 15),
                   ),
                 ),
               ),
@@ -134,7 +140,7 @@ class _TypingAppState extends State<TypingApp> {
       top: top,
       child: SizedBox(
         width: 120,
-        height: 220,
+        height: 180,
         child: ElevatedButton(
           onPressed: () => addWord(text),
           style: ElevatedButton.styleFrom(
