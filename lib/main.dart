@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:animate_do/animate_do.dart';
+import 'dart:async';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,7 +17,7 @@ class TypingApp extends StatefulWidget {
 }
 
 class _TypingAppState extends State<TypingApp> {
-  String typedText = "";
+  List<String> typedWords = [];
   List<String> sentences = [
     "Hello world",
     "Flutter is amazing",
@@ -28,12 +28,15 @@ class _TypingAppState extends State<TypingApp> {
 
   void addWord(String word) {
     setState(() {
-      typedText += (typedText.isEmpty ? "" : " ") + word;
+      typedWords.add(word);
     });
-    Future.delayed(Duration(seconds: 2), () {
+
+    Timer(Duration(seconds: 2), () {
       if (mounted) {
         setState(() {
-          typedText = "";
+          if (typedWords.isNotEmpty) {
+            typedWords.removeAt(0);
+          }
         });
       }
     });
@@ -61,12 +64,9 @@ class _TypingAppState extends State<TypingApp> {
             Expanded(
               flex: 1,
               child: Center(
-                child: FadeOut(
-                  duration: Duration(seconds: 2),
-                  child: Text(
-                    typedText,
-                    style: TextStyle(color: Colors.white, fontSize: 24),
-                  ),
+                child: Text(
+                  typedWords.join(" "),
+                  style: TextStyle(color: Colors.white, fontSize: 24),
                 ),
               ),
             ),
