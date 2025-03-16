@@ -38,17 +38,17 @@ class _TypingAppState extends State<TypingApp> {
       availableWords = wordChains[word] ?? [];
 
       fullStopTimer?.cancel();
-      fullStopTimer = Timer(Duration(seconds: 2), () {
+      fullStopTimer = Timer(Duration(seconds: 1), () {
         if (mounted && typedWords.isNotEmpty && !typedWords.last.endsWith(".")) {
           setState(() {
-            typedWords.add(".");
+            typedWords[typedWords.length - 1] += ".";
             availableWords = [];
           });
         }
       });
 
       sentenceTimer?.cancel();
-      sentenceTimer = Timer(Duration(seconds: 5), () {
+      sentenceTimer = Timer(Duration(milliseconds: 2500), () {
         if (mounted) {
           setState(() {
             typedWords.clear();
@@ -80,16 +80,13 @@ class _TypingAppState extends State<TypingApp> {
               children: [
                 Expanded(
                   flex: 2,
-                  child: Padding(
-                    padding: EdgeInsets.all(20),
-                    child: Wrap(
-                      spacing: 10,
-                      runSpacing: 10,
-                      alignment: WrapAlignment.center,
-                      children: availableWords.map((word) {
-                        return _buildButton(text: word);
-                      }).toList(),
-                    ),
+                  child: Stack(
+                    children: [
+                      _buildButton(left: 150, top: 100, text: availableWords.isNotEmpty ? availableWords[0] : ""),
+                      _buildButton(left: 300, top: 50, text: availableWords.length > 1 ? availableWords[1] : ""),
+                      _buildButton(right: 300, top: 50, text: availableWords.length > 2 ? availableWords[2] : ""),
+                      _buildButton(right: 150, top: 100, text: availableWords.length > 3 ? availableWords[3] : ""),
+                    ],
                   ),
                 ),
                 Expanded(
@@ -149,19 +146,24 @@ class _TypingAppState extends State<TypingApp> {
     );
   }
 
-  Widget _buildButton({required String text}) {
-    return SizedBox(
-      width: 120,
-      height: 160,
-      child: ElevatedButton(
-        onPressed: () => addWord(text),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.grey[700],
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+  Widget _buildButton({double? left, double? right, required double top, required String text}) {
+    return Positioned(
+      left: left,
+      right: right,
+      top: top,
+      child: SizedBox(
+        width: 120,
+        height: 160,
+        child: ElevatedButton(
+          onPressed: text.isNotEmpty ? () => addWord(text) : null,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.grey[700],
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
           ),
+          child: Text(text, style: TextStyle(color: Colors.white), textAlign: TextAlign.center),
         ),
-        child: Text(text, style: TextStyle(color: Colors.white), textAlign: TextAlign.center),
       ),
     );
   }
