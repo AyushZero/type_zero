@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
+  ]);
   runApp(TypingApp());
 }
 
 class TypingApp extends StatelessWidget {
   @override
-
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -17,33 +22,73 @@ class TypingApp extends StatelessWidget {
             Positioned(
               left: 50,
               top: 100,
-              child: ElevatedButton(
-                onPressed: () {},
-                child: Text('Word 1'),
+              child: SizedBox(
+                width: 120,
+                height: 60,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey[800],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Text('Word 1', style: TextStyle(color: Colors.white)),
+                ),
               ),
             ),
             Positioned(
               right: 50,
               top: 100,
-              child: ElevatedButton(
-                onPressed: () {},
-                child: Text('Word 2'),
+              child: SizedBox(
+                width: 120,
+                height: 60,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey[800],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Text('Word 2', style: TextStyle(color: Colors.white)),
+                ),
               ),
             ),
             Positioned(
               left: 50,
               bottom: 100,
-              child: ElevatedButton(
-                onPressed: () {},
-                child: Text('Word 3'),
+              child: SizedBox(
+                width: 120,
+                height: 60,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey[800],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Text('Word 3', style: TextStyle(color: Colors.white)),
+                ),
               ),
             ),
             Positioned(
               right: 50,
               bottom: 100,
-              child: ElevatedButton(
-                onPressed: () {},
-                child: Text('Word 4'),
+              child: SizedBox(
+                width: 120,
+                height: 60,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey[800],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Text('Word 4', style: TextStyle(color: Colors.white)),
+                ),
               ),
             ),
           ],
