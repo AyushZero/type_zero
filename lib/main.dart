@@ -20,8 +20,8 @@ class TypingApp extends StatelessWidget {
         body: Stack(
           children: [
             Positioned(
-              left: 50,
-              top: 100,
+              left: 100,
+              top: 50,
               child: SizedBox(
                 width: 120,
                 height: 60,
@@ -38,8 +38,8 @@ class TypingApp extends StatelessWidget {
               ),
             ),
             Positioned(
-              right: 50,
-              top: 100,
+              left: 300,
+              top: 20,
               child: SizedBox(
                 width: 120,
                 height: 60,
@@ -56,8 +56,8 @@ class TypingApp extends StatelessWidget {
               ),
             ),
             Positioned(
-              left: 50,
-              bottom: 100,
+              right: 300,
+              top: 20,
               child: SizedBox(
                 width: 120,
                 height: 60,
@@ -74,8 +74,8 @@ class TypingApp extends StatelessWidget {
               ),
             ),
             Positioned(
-              right: 50,
-              bottom: 100,
+              right: 100,
+              top: 50,
               child: SizedBox(
                 width: 120,
                 height: 60,
