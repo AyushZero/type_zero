@@ -29,22 +29,33 @@ class _TypingAppState extends State<TypingApp> {
     "like": ["this", "that", "playing", "coding"],
   };
   List<String> availableWords = ["I", "You", "We", "They"];
+  Timer? sentenceTimer;
+  Timer? fullStopTimer;
 
   void addWord(String word) {
     setState(() {
       typedWords.add(word);
       availableWords = wordChains[word] ?? [];
-      if (typedWords.length > 6) {
-        typedWords.removeAt(0);
-      }
-    });
 
-    Timer(Duration(seconds: 5), () {
-      if (mounted && typedWords.isNotEmpty) {
-        setState(() {
-          typedWords.removeAt(0);
-        });
-      }
+      fullStopTimer?.cancel();
+      fullStopTimer = Timer(Duration(seconds: 2), () {
+        if (mounted && typedWords.isNotEmpty && !typedWords.last.endsWith(".")) {
+          setState(() {
+            typedWords.add(".");
+            availableWords = [];
+          });
+        }
+      });
+
+      sentenceTimer?.cancel();
+      sentenceTimer = Timer(Duration(seconds: 5), () {
+        if (mounted) {
+          setState(() {
+            typedWords.clear();
+            availableWords = ["I", "You", "We", "They"];
+          });
+        }
+      });
     });
   }
 
@@ -69,12 +80,16 @@ class _TypingAppState extends State<TypingApp> {
               children: [
                 Expanded(
                   flex: 2,
-                  child: GridView.count(
-                    crossAxisCount: 4,
+                  child: Padding(
                     padding: EdgeInsets.all(20),
-                    children: availableWords.map((word) {
-                      return _buildButton(text: word);
-                    }).toList(),
+                    child: Wrap(
+                      spacing: 10,
+                      runSpacing: 10,
+                      alignment: WrapAlignment.center,
+                      children: availableWords.map((word) {
+                        return _buildButton(text: word);
+                      }).toList(),
+                    ),
                   ),
                 ),
                 Expanded(
@@ -135,15 +150,19 @@ class _TypingAppState extends State<TypingApp> {
   }
 
   Widget _buildButton({required String text}) {
-    return ElevatedButton(
-      onPressed: () => addWord(text),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.grey[700],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+    return SizedBox(
+      width: 120,
+      height: 60,
+      child: ElevatedButton(
+        onPressed: () => addWord(text),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.grey[700],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
         ),
+        child: Text(text, style: TextStyle(color: Colors.white), textAlign: TextAlign.center),
       ),
-      child: Text(text, style: TextStyle(color: Colors.white), textAlign: TextAlign.center),
     );
   }
 }
