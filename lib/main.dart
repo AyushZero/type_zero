@@ -6,6 +6,7 @@ void main() {
 
 class TypingApp extends StatelessWidget {
   @override
+
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
