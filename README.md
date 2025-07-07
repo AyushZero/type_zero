@@ -1,4 +1,4 @@
-# Adaptive Typing App
+# Adaptive Typing App (In development)
 
 ## Overview
 The **Adaptive Typing App** is an experimental typing interface designed to optimize text input by dynamically adjusting word placement. The app uses a minimal UI with predictive word blocks positioned ergonomically for faster typing.
